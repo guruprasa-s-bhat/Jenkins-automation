@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Backend Test') {
+            steps {
+                dir('backend') {
+                    sh 'npm install'
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Frontend Test') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm test'
+                }
+            }
+        }
+
+        // We will add these stages together after the basic pipeline works:
+        // Trivy filesystem scan
+        // SonarQube analysis
+        // Docker image build
+        // Trivy image scan
+        // Docker Hub push
+        // Local deployment
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+    }
+}
