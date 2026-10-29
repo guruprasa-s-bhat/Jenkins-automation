@@ -9,7 +9,7 @@ pipeline {
         }
 
         stage('Backend Test') {
-            step{
+            steps {
                 dir('backend'){
                     sh 'npm ci'
                     sh 'npm test'
