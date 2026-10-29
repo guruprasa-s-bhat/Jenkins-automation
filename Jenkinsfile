@@ -19,9 +19,10 @@ pipeline {
 
         stage('Frontend Test') {
             steps {
-                dir('frontend')
-                sh 'npm ci'
-                sh 'npm test'
+                dir('frontend'){
+                    sh 'npm ci'
+                    sh 'npm test'
+                }  
             }
         }
     }
