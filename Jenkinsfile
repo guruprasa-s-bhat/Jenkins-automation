@@ -35,13 +35,19 @@ pipeline {
         stage('Sonarqube analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarScanner';
-                    
+                    def scannerHome = tool 'SonarScanner'
+
                     withSonarQubeEnv() {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                     }
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            deleteDir()
         }
     }
 }
