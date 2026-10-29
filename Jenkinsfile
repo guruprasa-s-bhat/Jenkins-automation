@@ -25,5 +25,11 @@ pipeline {
                 }  
             }
         }
+
+        stage('Trivy Filesystem Scan'){
+            steps {
+                sh 'trivy fs --severity HIGH,CRITICAL .'
+            }
+        }
     }
 }
