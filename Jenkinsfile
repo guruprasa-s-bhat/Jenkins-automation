@@ -7,10 +7,13 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Backend Test') {
             step{
-                sh 'npm ci'
-                sh 'npm test'
+                dir('backend'){
+                    sh 'npm ci'
+                    sh 'npm test'
+                }   
             }
         }
     }
