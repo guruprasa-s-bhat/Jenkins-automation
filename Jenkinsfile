@@ -31,5 +31,17 @@ pipeline {
                 sh 'trivy fs --severity HIGH,CRITICAL .'
             }
         }
+
+        stage('Sonarqube analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner';
+                    
+                    withSonarQubeEnv() {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                     }
+                }
+            }
+        }
     }
 }
