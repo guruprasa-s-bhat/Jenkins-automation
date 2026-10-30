@@ -64,6 +64,12 @@ pipeline {
                sh "docker build -t devops-dashboard-frontend:${BUILD_NUMBER} ./frontend"
             }
         }
+        stage('Trivy Image Scan') {
+            steps {
+               sh "trivy image --severity HIGH,CRITICAL devops-dashboard-backend:${BUILD_NUMBER}"
+               sh "trivy image --severity HIGH,CRITICAL devops-dashboard-frontend:${BUILD_NUMBER}"
+    }
+}
     }
 
     post {
