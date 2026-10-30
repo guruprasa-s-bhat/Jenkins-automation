@@ -70,6 +70,36 @@ pipeline {
                sh "trivy image --severity HIGH,CRITICAL devops-dashboard-frontend:${BUILD_NUMBER}"
     }
 }
+       stage('Docker Hub Push') {
+    when {
+        branch 'main'
+    }
+
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub-cred',
+                usernameVariable: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh '''
+                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+                docker tag devops-dashboard-backend:${BUILD_NUMBER} \
+                    $DOCKER_USERNAME/devops-dashboard-backend:${BUILD_NUMBER}
+
+                docker tag devops-dashboard-frontend:${BUILD_NUMBER} \
+                    $DOCKER_USERNAME/devops-dashboard-frontend:${BUILD_NUMBER}
+
+                docker push $DOCKER_USERNAME/devops-dashboard-backend:${BUILD_NUMBER}
+                docker push $DOCKER_USERNAME/devops-dashboard-frontend:${BUILD_NUMBER}
+
+                docker logout
+            '''
+        }
+    }
+}
     }
 
     post {
