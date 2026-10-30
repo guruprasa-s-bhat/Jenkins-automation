@@ -70,6 +70,8 @@ pipeline {
                sh "trivy image --severity HIGH,CRITICAL devops-dashboard-frontend:${BUILD_NUMBER}"
     }
 }
+
+        
        stage('Docker Hub Push') {
     when {
         branch 'main'
@@ -99,6 +101,18 @@ pipeline {
             '''
         }
     }
+    stage('Deploy') {
+    when {
+        branch 'main'
+    }
+
+    steps {
+        sh '''
+            docker compose down || true
+            docker compose up -d
+        '''
+    }
+}
 }
     }
 
