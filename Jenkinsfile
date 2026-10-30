@@ -44,20 +44,26 @@ pipeline {
             }
         }
         stage('Quality Gate') {
-    steps {
-        timeout(time: 5, unit: 'MINUTES') {
-            script {
-                def qualityGate = waitForQualityGate()
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    script {
+                        def qualityGate = waitForQualityGate()
 
-                echo "SonarQube Quality Gate Status: ${qualityGate.status}"
+                        echo "SonarQube Quality Gate Status: ${qualityGate.status}"
 
-                if (qualityGate.status != 'OK') {
-                    error "Quality Gate failed. Status: ${qualityGate.status}"
+                        if (qualityGate.status != 'OK') {
+                            error "Quality Gate failed. Status: ${qualityGate.status}"
+                        }
+                    }
                 }
             }
         }
-    }
-}
+        stage('Docker build') {
+            steps {
+               sh "docker build -t devops-dashboard-backend:${BUILD_NUMBER} ./backend"
+               sh "docker build -t devops-dashboard-frontend:${BUILD_NUMBER} ./frontend"
+            }
+        }
     }
 
     post {
