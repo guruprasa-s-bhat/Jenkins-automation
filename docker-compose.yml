@@ -1,16 +1,12 @@
 services:
   backend:
-    build:
-      context: ./backend
+    image: gurubhat01/devops-dashboard-backend:${BUILD_NUMBER}
     container_name: devflow-backend
     ports:
       - "5000:5000"
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_API_URL: http://localhost:5000
+    image: gurubhat01/devops-dashboard-frontend:${BUILD_NUMBER}
     container_name: devflow-frontend
     ports:
       - "3000:80"
